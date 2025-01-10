@@ -1,0 +1,23 @@
+{
+  "name": "fullstackopen-phonebook-backend",
+  "version": "0.0.1",
+  "description": "Node backend for the phonebook application",
+  "main": "index.js",
+  "scripts": {
+	"start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/ilta/fullstackopen-phonebook-backend"
+  },
+  "author": "Ilkka Tommola <ilta@iki.fi>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
