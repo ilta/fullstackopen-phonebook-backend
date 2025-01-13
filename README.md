@@ -1,5 +1,11 @@
 # Exercises, part 3
 
+## Server
+
+The server is deployed to [Render](https://fullstackopen-phonebook-backend-7nti.onrender.com/).
+
+## Files
+
 The file structure is as follows:
 
 ```
