@@ -11,10 +11,7 @@ morgan.token('body', function (req, res) {
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
-<<<<<<< HEAD
-=======
 app.use(express.static('dist'));
->>>>>>> 6909368 (Completed ex 3.9)
 app.use(cors());
 
 persons = [
