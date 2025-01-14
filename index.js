@@ -20,6 +20,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'SyntaxError') {
+    return response.status(400).send({ error: 'malformatted JSON request' });
   }
 
   next(error);
@@ -52,9 +54,13 @@ let persons = [
 ];
 
 app.get('/info', (request, response, next) => {
-  response.send(
-    `Phonebook has info for ${persons.length} people<br />${new Date()}`
-  );
+  Person.estimatedDocumentCount()
+    .then((personCount) => {
+      response.send(
+        `Phonebook has info for ${personCount} people<br />${new Date()}`
+      );
+    })
+    .catch((error) => next(error));
 });
 
 app.get('/api/persons', (request, response) => {
@@ -64,14 +70,15 @@ app.get('/api/persons', (request, response) => {
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
-  const id = request.params.id;
-  const person = persons.find((p) => p.id === id);
-
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -99,12 +106,6 @@ app.post('/api/persons', (request, response) => {
       error: 'number missing',
     });
   }
-
-  // if (persons.find((p) => p.name === body.name)) {
-  //   return response.status(400).json({
-  //     error: 'name must be unique',
-  //   });
-  // }
 
   const person = new Person({
     name: body.name,
