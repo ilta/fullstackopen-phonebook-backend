@@ -7,12 +7,14 @@ const Person = require('./models/person');
 const mongoose = require('mongoose');
 
 app.use(express.json());
+
 morgan.token('body', function (req, res) {
   return JSON.stringify(req.body);
 });
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
+
 app.use(express.static('dist'));
 app.use(cors());
 
@@ -64,7 +66,11 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id;
-  persons = persons.filter((p) => p.id !== id);
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      response.status(202).end();
+    })
+    .catch((error) => next(error));
 
   response.status(204).end();
 });
