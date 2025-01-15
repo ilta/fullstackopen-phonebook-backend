@@ -22,6 +22,8 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'SyntaxError') {
     return response.status(400).send({ error: 'malformatted JSON request' });
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
@@ -68,7 +70,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   response.status(204).end();
 });
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const { name, number } = request.body;
 
   if (!name) {
@@ -85,15 +87,19 @@ app.post('/api/persons', (request, response) => {
 
   const person = new Person({ name, number });
 
-  person.save().then((savedPerson) => {
-    response.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      response.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const { name, number } = request.body;
+  const { number } = request.body;
+  const opts = { new: true, runValidators: true };
 
-  Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true })
+  Person.findByIdAndUpdate(request.params.id, { number }, opts)
     .then((updatedPerson) => {
       response.json(updatedPerson);
     })
