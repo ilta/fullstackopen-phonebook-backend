@@ -15,7 +15,7 @@ tests/                   tests (.rest files for VS Code) for manipulating record
   add_new_person_02.rest adding a person with missing name (should send an error)
   add_new_person_03.rest adding a person with missing number (should send an error)
   add_new_person_04.rest adding a person with too short name (should send an error)
-  delete_01.rest         removing a person with the id "1"
+  delete_01.rest         removing a person with the id "1" (should fail now)
   update_person_01.rest  normal updating of a person's number
   update_person_02.rest  update a person with missing number (should send an error)
   update_person_03.rest  update a person with invalid number type (should send an error)
